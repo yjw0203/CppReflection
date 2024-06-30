@@ -1,0 +1,5 @@
+{
+    "name": "Example",
+    "dependencys": ["CppReflection"],
+    "build": "exe"
+}
