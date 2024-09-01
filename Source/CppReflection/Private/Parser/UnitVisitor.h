@@ -1,10 +1,11 @@
 #pragma once
 
 template<class ConditionPolicy, class ActionPolicy>
-class CRTranslationUnitVisitor
+class CRTranslationUnitVisitor : public ActionPolicy
 {
 public:
-    CRTranslationUnitVisitor(){};
+    using ActionPolicy::ActionPolicy;
+
     void Visit(CRTranslationUnit unit)
     {
         CRNamespace tempNamespace;
@@ -14,7 +15,7 @@ private:
     void dfs(CRCursor cursor, CRNamespace& currentNamespace)
     {
         int shouldVisitFlag = ShouldVisit(cursor, currentNamespace);
-        if (shouldVisitFlag)DoAction(cursor, currentNamespace, shouldVisitFlag);
+        if (shouldVisitFlag)DoActionInterface(cursor, currentNamespace, shouldVisitFlag);
 
         bool push_ns = false;
         if (cursor.GetKind() == CXCursor_Namespace || cursor.GetKind() == CXCursor_ClassDecl || cursor.GetKind() == CXCursor_StructDecl || cursor.GetKind() == CXCursor_FieldDecl)
@@ -38,9 +39,8 @@ private:
             currentNamespace.pop_back();
         }
     }
-    bool ShouldVisit(CRCursor cursor, const CRNamespace& Namespace) { return m_condition.Condition(cursor, Namespace); }
-    void DoAction(CRCursor cursor, const CRNamespace& Namespace,int flag) { m_handle.DoAction(cursor, Namespace, flag); }
+    int ShouldVisit(CRCursor cursor, const CRNamespace& Namespace) { return m_condition.Condition(cursor, Namespace); }
+    void DoActionInterface(CRCursor cursor, const CRNamespace& Namespace,int flag) { this->DoAction(cursor, Namespace, flag); }
 private:
-    ActionPolicy m_handle;
     ConditionPolicy m_condition;
 };

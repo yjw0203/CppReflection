@@ -1,4 +1,5 @@
 #include "UnitVisitorPolicy.h"
+#include "Utils.h"
 #include <iostream>
 
 int CRCondition_IsClassOrTypedef::Condition(CRCursor cursor, const CRNamespace& Namespace)
@@ -17,7 +18,18 @@ int CRCondition_IsClassOrTypedef::Condition(CRCursor cursor, const CRNamespace& 
 
 int CRCondition_IsAnnotateAttr::Condition(CRCursor cursor, const CRNamespace& Namespace)
 {
-    return cursor.GetKind() == CXCursor_AnnotateAttr;
+    if (cursor.GetKind() == CXCursor_AnnotateAttr)
+    {
+        if (cursor.GetDisplayName() == "type=class")
+        {
+            return flag_is_class;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int CRCondition_IsField::Condition(CRCursor cursor, const CRNamespace& Namespace)
@@ -47,4 +59,21 @@ void CRAction_PrintField::DoAction(CRCursor cursor, const CRNamespace& Namespace
     for (auto& name : Namespace)(displayName += name) += "::";
     displayName += cursor.GetDisplayName();
     std::cout << "FieldName: " << displayName << std::endl;
+}
+
+CRAction_GenerateFromAnnotateAttr::CRAction_GenerateFromAnnotateAttr(const char* generated_file_h)
+    : m_generated_file_h(generated_file_h)
+{}
+
+void CRAction_GenerateFromAnnotateAttr::DoAction(CRCursor cursor, const CRNamespace& Namespace, int flag)
+{
+    if (flag == CRCondition_IsAnnotateAttr::flag_is_class)
+    {
+        std::string displayName = "";
+        for (int index = 0; index < Namespace.size(); index++)(displayName += Namespace[index]) += ((index + 1 == Namespace.size()) ? "" : "::");
+
+        std::string template_str = std::string("") + "#define GENERATED_BODY() public: const char* GetClassName(){return \"" + displayName +"\";} ";
+    
+        CRWriteFile(m_generated_file_h.c_str(), template_str);
+    }
 }
