@@ -14,5 +14,14 @@ set(CMAKE_CXX_STANDARD 17)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ## 3rd party
+set(llvm_include ${CMAKE_CURRENT_SOURCE_DIR}/3rd/LLVM/include)
+set(llvm_lib ${CMAKE_CURRENT_SOURCE_DIR}/3rd/LLVM/lib/x64/libclang.lib)
+set(llvm_dll ${CMAKE_CURRENT_SOURCE_DIR}/3rd/LLVM/bin/x64/libclang.dll)
+
+set(mustache_include ${CMAKE_CURRENT_SOURCE_DIR}/3rd/mustache/include)
+
+set(3rd_party_include ${llvm_include} ${mustache_include})
+set(3rd_party_lib ${llvm_lib})
+set(3rd_party_dll ${llvm_dll})
 
 add_subdirectory(Source)
