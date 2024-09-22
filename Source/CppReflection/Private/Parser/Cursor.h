@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 typedef std::vector<std::string> CRNamespace;
+std::string CRNamespaceToString(const CRNamespace& Namespace);
 
 class CRCursor
 {
@@ -11,6 +12,9 @@ public:
     CRCursor(const CXCursor& handle);
     operator CXCursor();
 
+    static CRCursor None();
+
+    CRCursor GetParent(void) const;
     List GetChildren(void) const;
     std::string GetDisplayName(void) const;
     CXCursorKind CRCursor::GetKind(void) const;

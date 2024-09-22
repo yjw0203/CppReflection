@@ -2,10 +2,28 @@
 #include <string>
 #include "Utils.h"
 
+std::string CRNamespaceToString(const CRNamespace& Namespace)
+{
+    std::string res = "";
+    int first = 1;
+    for (auto& space_name : Namespace)(res += first ? "" : "::") += space_name, first = 0;
+    return res;
+}
+
 CRCursor::CRCursor(const CXCursor& handle)
     : m_handle(handle) { }
 
 CRCursor::operator CXCursor() { return m_handle; }
+
+CRCursor CRCursor::None()
+{
+    return clang_getNullCursor();
+}
+
+CRCursor CRCursor::GetParent(void) const
+{
+    return clang_getCursorLexicalParent(m_handle);
+}
 
 CRCursor::List CRCursor::GetChildren(void) const
 {

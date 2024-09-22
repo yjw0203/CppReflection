@@ -16,19 +16,4 @@ private:
 
 #include "UnitVisitor.h"
 
-template<class ActionPolicy>
-using CRUnitVisitorForClass = CRTranslationUnitVisitor<CRCondition_IsClassOrTypedef, ActionPolicy>;
-
-template<class ActionPolicy>
-using CRUnitVisitorForAnnotateAttr = CRTranslationUnitVisitor<CRCondition_IsAnnotateAttr, ActionPolicy>;
-
-template<class ActionPolicy>
-using CRUnitVisitorForField = CRTranslationUnitVisitor<CRCondition_IsField, ActionPolicy>;
-
-using CRUnitPrintAllClassVisitor = CRUnitVisitorForClass<CRAction_PrintClass>;
-using CRUnitPrintAllAnnotateAttr = CRUnitVisitorForAnnotateAttr<CRAction_PrintAnnotateAttr>;
-using CRUnitPrintAllField = CRUnitVisitorForField<CRAction_PrintField>;
-
-using CRUnitGenerateFromAnnotateAttr = CRUnitVisitorForAnnotateAttr<CRAction_GenerateFromAnnotateAttr>;
-
 CRTranslationUnit CRCreateTranslationUnitFromSourceFile(const char* source_filename);

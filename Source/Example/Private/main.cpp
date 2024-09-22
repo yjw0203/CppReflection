@@ -6,10 +6,15 @@
 
 #define Class(...) class Meta(type=class) __VA_ARGS__
 
-#include <iostream>
+//#include <iostream>
 #include "main.generated.h"
 
-Class(TestA)
+Class(TestC)
+{
+
+};
+
+Class(TestA) : public TestC
 {
     GENERATED_BODY()
 public:
@@ -19,6 +24,7 @@ public:
         int x;
     };
 public:
+    int qqq(int x) {};
     Meta(true)
     int test_x;
 private:
@@ -31,6 +37,6 @@ typedef TestA hhh;
 int main()
 {
     TestA a;
-    std::cout << "ClassName is " << a.GetClassName() << std::endl;
+    //std::cout << "ClassName is " << a.GetClassName() << std::endl;
     return 0;
 }
